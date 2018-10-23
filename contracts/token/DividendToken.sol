@@ -1,14 +1,35 @@
 /**
  * @title Dividend contract
  *
- * @version 1.0
+ * @version 2.0
  * @author Validity Labs AG <info@validitylabs.org>
+ *
+ * The TTA tokens are issued as participation certificates and represent
+ * uncertificated securities within the meaning of article 973c Swiss CO. The
+ * issuance of the TTA tokens has been governed by a prospectus issued by
+ * Tend Technologies AG.
+ *
+ * TTA tokens are only recognized and transferable in undivided units.
+ *
+ * The holder of a TTA token must prove his possessorship to be recognized by
+ * the issuer as being entitled to the rights arising out of the respective
+ * participation certificate; he/she waives any rights if he/she is not in a
+ * position to prove him/her being the holder of the respective token.
+ *
+ * Similarly, only the person who proves him/her being the holder of the TTA
+ * Token is entitled to transfer title and ownership on the token to another
+ * person. Both the transferor and the transferee agree and accept hereby
+ * explicitly that the tokens are transferred digitally, i.e. in a form-free
+ * manner. However, if any regulators, courts or similar would require written
+ * confirmation of a transfer of the transferable uncertificated securities
+ * from one investor to another investor, such investors will provide written
+ * evidence of such transfer.
  */
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.24;
 
-import "../../../node_modules/zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
-import "../../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
-import "../../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../node_modules/zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
+import "../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
+import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract DividendToken is StandardToken, Ownable {
     using SafeMath for uint256;
@@ -45,7 +66,7 @@ contract DividendToken is StandardToken, Ownable {
     /**
      * @dev Deploy the DividendToken contract and set the owner of the contract
      */
-    function DividendToken() public {
+    constructor() public {
         isTreasurer[owner] = true;
     }
 
@@ -55,7 +76,8 @@ contract DividendToken is StandardToken, Ownable {
      */
     function claimDividend() public returns (bool) {
         // unclaimed dividend fractions should expire after 330 days and the owner can reclaim that fraction
-        require(dividendEndTime > 0 && dividendEndTime.sub(claimTimeout) > now);
+        require(dividendEndTime > 0);
+        require(dividendEndTime.sub(claimTimeout) > block.timestamp);
 
         updateDividend(msg.sender);
 
@@ -65,7 +87,7 @@ contract DividendToken is StandardToken, Ownable {
         msg.sender.transfer(payment);
 
         // Trigger payout event
-        Payout(msg.sender, payment);
+        emit Payout(msg.sender, payment);
 
         return true;
     }
@@ -94,7 +116,7 @@ contract DividendToken is StandardToken, Ownable {
         // last update in previous period -> reset claimable dividend
         if (lastUpdate[_hodler] < lastDividendIncreaseDate) {
             unclaimedDividend[_hodler] = calcDividend(_hodler, totalSupply_);
-            lastUpdate[_hodler] = now;
+            lastUpdate[_hodler] = block.timestamp;
         }
     }
 
@@ -144,7 +166,7 @@ contract DividendToken is StandardToken, Ownable {
      */
     function setTreasurer(address _treasurer, bool _active) public onlyOwner {
         isTreasurer[_treasurer] = _active;
-        ChangedTreasurer(_treasurer, _active);
+        emit ChangedTreasurer(_treasurer, _active);
     }
 
     /**
@@ -154,11 +176,11 @@ contract DividendToken is StandardToken, Ownable {
      */
     function requestUnclaimed() public onlyOwner {
         // Send remaining ETH to beneficiary (back to owner) if dividend round is over
-        require(now >= dividendEndTime.sub(claimTimeout));
+        require(block.timestamp >= dividendEndTime.sub(claimTimeout));
 
-        msg.sender.transfer(this.balance);
+        msg.sender.transfer(address(this).balance);
 
-        Reclaimed(this.balance, dividendEndTime, now);
+        emit Reclaimed(address(this).balance, dividendEndTime, block.timestamp);
     }
 
     /**
@@ -168,24 +190,24 @@ contract DividendToken is StandardToken, Ownable {
      */
     function() public payable {
         require(isTreasurer[msg.sender]);
-        require(dividendEndTime < now);
+        require(dividendEndTime < block.timestamp);
 
         // pay back unclaimed dividend that might not have been claimed by owner yet
-        if (this.balance > msg.value) {
-            uint256 payout = this.balance.sub(msg.value);
+        if (address(this).balance > msg.value) {
+            uint256 payout = address(this).balance.sub(msg.value);
             owner.transfer(payout);
-            Reclaimed(payout, dividendEndTime, now);
+            emit Reclaimed(payout, dividendEndTime, block.timestamp);
         }
 
-        currentDividend = this.balance;
+        currentDividend = address(this).balance;
 
         // No active dividend cycle found, initialize new round
-        dividendEndTime = now.add(dividendCycleTime);
+        dividendEndTime = block.timestamp.add(dividendCycleTime);
 
         // Trigger payin event
-        Payin(msg.sender, msg.value, dividendEndTime);
+        emit Payin(msg.sender, msg.value, dividendEndTime);
 
-        lastDividendIncreaseDate = now;
+        lastDividendIncreaseDate = block.timestamp;
     }
 
     /**

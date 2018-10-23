@@ -5,7 +5,6 @@ const assert = require('assert');
 // Valid hashes using Keccak-256
 
 const contracts = {
-    Crowdsale     : fs.readFileSync('node_modules/zeppelin-solidity/contracts/crowdsale/Crowdsale.sol'),
     MintableToken : fs.readFileSync('node_modules/zeppelin-solidity/contracts/token/ERC20/MintableToken.sol'),
     PausableToken : fs.readFileSync('node_modules/zeppelin-solidity/contracts/token/ERC20/PausableToken.sol'),
     StandardToken : fs.readFileSync('node_modules/zeppelin-solidity/contracts/token/ERC20/StandardToken.sol'),
@@ -18,16 +17,15 @@ const contracts = {
 };
 
 const hashes = {
-    Crowdsale     : '0xb8321cb3ccf453f87282d7c53ea3cdc58e8b5c00b434da600ff12b974e3e3b96',
-    MintableToken : '0x07397a8011758b3be15dbf6923ed292e2facd777441995ba39f8e118f6c63682',
-    PausableToken : '0x1f91bb15f141c4488de987a008592cdb7fc5d56ec332e46eb2c2b0b165cc2608',
-    StandardToken : '0xd2b344a5259e19ec143074cfa65637a10c40b68395c59808c4af13bccbb2de55',
-    Pausable      : '0x49d41cc2b80f7732cdb504d67cd9a84ebeee38f8ec7204c96c2bded71e295f6a',
-    Ownable       : '0x1ad4ec802268eb3e02e732ecf8b65c39bb00cdf448e7737aea27ecfa9fd10d6a',
-    ERC20         : '0xd0b7ada654221cc9e4cb4a97754b99d2e7c2fb824303f1ba5f1661f4e8086751',
-    BasicToken    : '0x948404468d61ff35ea4194650670408dabd65da7f905a1c16888ab84520bf39e',
-    ERC20Basic    : '0x1fd84910b5033c9d169995cd88bdd465d37d4a384ef2837b238b88cd26ef74e7',
-    SafeMath      : '0x532c638adef093d4c7c250bf4bb0afbf45ae35a15e06f90940930f5b8ce1a04d'
+    MintableToken : '0x7184403681dfe14804bd60f4f5aef5e40f79cccc162ba29581602f8edb54853d',
+    PausableToken : '0xd94abec1ad66a5167113d79e0aea2ae725cf3d34f8d72b70ea2115199c715391',
+    StandardToken : '0xf4ae4ed0fd71f15329df75d165c68afc24385262abbf323f1396ee681f72073d',
+    Pausable      : '0x9cba4eb7059b38a00d34429f77f279257609b42c2800612cd5521914c364a492',
+    Ownable       : '0x2c92ef64d25ddba75a96b518ab3ad5211c4edab898ac2a693c300274ccd0c675',
+    ERC20         : '0xd48f887d15d0411901fc331e74a25d7afa63d89a1257e8e3f43ce1b1e8f4a1e3',
+    BasicToken    : '0xa1a882b859b5ceac4a879b4820bf5c2eeeee823b563da42abac5ef119fd6e39e',
+    ERC20Basic    : '0xa36ddb4cd5f04f0f5b7f344819267dd5500467d58949dd012a85876233c9314e',
+    SafeMath      : '0x6f859ac66b474844c08916cd628b116978fb0f211489a5f45b1fb4a2f7db56b1'
 };
 
 Object.keys(contracts).forEach((key) => {

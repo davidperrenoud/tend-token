@@ -1,9 +1,9 @@
 {
-  "name": "ico-tend",
+  "name": "tend-token",
   "version": "1.0.0",
-  "description": "The TEND ICO.",
+  "description": "The TEND token.",
   "author": "Validity Labs AG <info@validitylabs.org>",
-  "homepage": "https://github.com/validitylabs/ico-tend",
+  "homepage": "https://github.com/TendTechnologies/tend-token",
   "private": true,
   "license": "UNLICENSED",
   "engines": {
@@ -13,6 +13,7 @@
     "start": "yarn dev",
     "dev": "truffle develop",
     "coverage": "shx rm -fr build; solidity-coverage",
+    "test": "truffle test",
     "abi": "babel-node ./tools/abiEncode.js",
     "bundle": "shx rm -fr build; shx mkdir build; shx mkdir build/bundle; solcpiler --config-file .solcpiler.json",
     "migrate-rinkeby": "yarn bundle; cross-env NODE_ENV=rinkeby babel-node ./tools/deploy.js",
@@ -28,7 +29,7 @@
     "truffle-contract": "^3.0.1",
     "web3": "^1.0.0-beta.26",
     "winston": "^2.4.0",
-    "zeppelin-solidity": "^1.6.0"
+    "zeppelin-solidity": "^1.10.0"
   },
   "devDependencies": {
     "@validitylabs/js-utils": "^0.0.1",
@@ -50,12 +51,12 @@
     "keythereum": "^1.0.2",
     "shelljs": "^0.7.8",
     "shx": "^0.2.2",
-    "solc": "0.4.18",
+    "solc": "0.4.24",
     "solcpiler": "^0.0.11",
-    "solidity-coverage": "git://github.com/validitylabs/solidity-coverage.git",
+    "solidity-coverage": "^0.5.4",
     "superagent": "^3.8.1",
     "tree-kill": "^1.2.0",
-    "truffle": "^4.0.1"
+    "truffle": "^4.1.11"
   },
   "optionalDevDependencies": {
     "fsevents": "*"

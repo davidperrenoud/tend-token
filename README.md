@@ -1,44 +1,32 @@
-# ICO for TEND
+# Token for TEND
 
-## Crowdsale Features:
-* 13 million total token cap
-    * 9.5 million presale & crowdsale cap
-    * 1.5 million ICO enablers cap - not vested
-    * 2 million development team cap - vested
-* Vested tokens
+[![CircleCI](https://circleci.com/gh/TendTechnologies/tend-token.svg?style=svg)](https://circleci.com/gh/TendTechnologies/tend-token)
+
+## Token Features
+* ERC20-compatible
+    * 18 decimals
+    * non-divisible, requires multiple of 10^18 for transferring, minting and vesting
+* pausable
+* paused until owner calls `unpause` function
+* featuring dividend
+    * dividend coupled to token, unclaimed dividend transferred along when using token `transfer` or `transferFrom` functions
+    * dividend can be paid in once every 350 days by treasurer account
+    * dividend can be claimed up to 330 days after receiving the payment
+    * unclaimed dividend can be reclaimed by owner 330 days until last payment and until next payment is coming in
+    * treasurer accounts set by owner
+* `mintDevelopmentTeamTokens(uint256 amount)` - mints up to 2 million tokens that are vested over 4 years
+* vested tokens
     * vesting period starts at the time that the admin allocates the tokens
     * each beneficiary has their own vesting contract that locks up their tokens until they can be released by beneficiary themselves
     * 1/4 available after 1 year, nothing before (cliff)
     * remainder can be released continuously until all tokens are released after a total of 4 years (3 years past cliff)
     * non-revocable, can be released by respective owner from their vesting contract (one contract per owner)
-* owner can allot tokens for presale investors manually, this still requires confirmation and settlement
-* allow token distribution to different address than sending Ether address via `buyTokens` - requires confirmation and settlement
-* Discounts:
-    * 1st 3 million    -  20% discount -  1 token = 8 CHF
-    * 2nd 3 million    -  10% discount -  1 token = 9 CHF
-    * last 3.5 million -  0% discount  -  1 token = 10 CHF
-* underwriter has to make tokens transferrable by calling `finalize`, if they do not, tokens will remain paused
-* owner of
-* mintTeamTokens(uint256 amount) - mints up to 1.5 million tokens that are vested over 4 years
-* mintCompanyTokens - mints 2 million tokens that are vested over 4 years
-* owner is transferrable
-
-## Token Features:
-* ERC20-compatible
-* pausable
-* paused until un-paused by `finalize` in crowdsale contract
-* featuring dividend:
-    * dividend coupled to token, unclaimed dividend transferred along when using token `transfer` or `transferFrom` functions
-    * dividend can be paid in once every 350 days by treasurer account
-    * dividend can be claimed up to 330 days after receiving the payment
-    * unclaimed dividend can be reclaimed by owner 330 days until last payment and until next payment is coming in
-* treasurer accounts set by owner
 * owner is transferrable
 
 ## Requirements
-The server side scripts requires NodeJS 8.
+The server-side scripts requires Node.js 8.
 Go to [NVM](https://github.com/creationix/nvm) and follow the installation description.
-By running `source ./tools/initShell.sh`, the correct NodeJs version will be activated for the current shell.
+By running `source ./tools/initShell.sh`, the correct Node.js version will be activated for the current shell.
 
 Yarn is required to be installed globally to minimize the risk of dependency issues.
 Go to [Yarn](https://yarnpkg.com/en/docs/install) and choose the right installer for your system.
@@ -64,13 +52,13 @@ cd <project base directory>
 source ./tools/initShell.sh
 yarn install
 ```
-This will install all required dependecies in the directory _node_modules_.
+This will install all required dependencies in the directory _node_modules_.
 
 ## NVM
-You can load the configured lts/carbon NodeJS version (8.x LTS) for this project by running `nvm use` in project root directory.
+You can load the configured lts/carbon Node.js version (8.x LTS) for this project by running `nvm use` in project root directory.
 
 ## Compile, migrate and run unit tests
-To deploy the ICO smart contracts, go into the projects root directory, and change into the truffle development console.
+To deploy the token smart contracts, go into the projects root directory, and change into the truffle development console.
 ```
 cd <project base directory>
 source ./tools/initShell.sh
@@ -90,7 +78,7 @@ test
 ```
 To leave the development console, simply press <CTRL + D>.
 
-__The development console will automatically start it's own TestRPC server for you!__
+__The development console will automatically start its own TestRPC server for you!__
 
 __Because the test consumes a lot of ETH, please restart the development console between each test run!__
 
@@ -101,7 +89,7 @@ cd <project base directory>
 source ./tools/initShell.sh
 yarn run coverage
 ```
-__The coverage test will automatically start it's own TestRPC server for you!__
+__The coverage test will automatically start its own TestRPC server for you!__
 
 ## Rinkeby testnet deployment
 For the Rinkeby deployment, you need a Geth installation on your machine.
@@ -132,12 +120,12 @@ web3.eth.accounts
 ```
 You can [obtain Rinkeby testnet Ether](https://www.rinkeby.io/#faucet) from the faucet by pasting your address in social media and pasting the link.
 
-Connect to your rinkeby Geth console and unlock the account for deployment (2700 seconds = 45 minutes).
+Connect to your Rinkeby Geth console and unlock the account for deployment (2700 seconds = 45 minutes).
 ```
 > personal.unlockAccount(web3.eth.accounts[0], "", 2700)
 ```
 
-Change the `from` (deployer), `wallet` and `underwriter` accounts in ico.cnf.json:
+Change the `from` (deployer), `wallet` and `underwriter` accounts in token.cnf.json:
 ```
 "from":         "0x0fadbcc6baf38842493ea527759ce7ce1644d0cc",
 "wallet":       "0xCCb50efc315614dF57f2C774391A3410B02F06EF",
@@ -151,8 +139,8 @@ This may take several minutes to finish.
 https://rinkeby.etherscan.io/address/<YOUR_RINKEBY_ADDRESS>
 
 ## MainNet deployment
-__This is the production deployment, so please doublecheck all properties in ico.cnf.json!__
-- update ico.cnf.json with latest startTime, endTime, cap, confirmationPeriod, rateChfPerEth
+__This is the production deployment, so please doublecheck all properties in token.cnf.json!__
+- update token.cnf.json with latest startTime, endTime, cap, confirmationPeriod, rateChfPerEth
 
 For the MainNet deployment, you need a Geth installation on your machine.
 Follow the [installation instructions](https://github.com/ethereum/go-ethereum/wiki/Building-Ethereum) for your OS.
@@ -189,7 +177,7 @@ Connect to your MainNet Geth console and unlock the account for deployment (240 
 personal.unlockAccount(web3.eth.accounts[0], "<YOUR_SECURE_PASSWORD>", 240)
 ```
 
-Change the `from` (deployer), `wallet` and `underwriter` accounts in ico.cnf.json:
+Change the `from` (deployer), `wallet` and `underwriter` accounts in token.cnf.json:
 ```
 "from":         "<REAL_ADDRESS_HERE>",
 "wallet":       "<REAL_ADDRESS_HERE>",
@@ -200,7 +188,7 @@ Change the `from` (deployer), `wallet` and `underwriter` accounts in ico.cnf.jso
 After exiting the console by `<STRG> + <D>`, simply run `yarn migrate-mainnet`.
 This may take several minutes to finish.
 
-Now, your smart contract can be found on etherscan:
+Now, your smart contract can be found on Etherscan:
 https://etherscan.io/address/<REAL_ADDRESS_HERE>
 
 ### Generate Contructor ABI
@@ -209,17 +197,17 @@ Simply run `yarn abi` and copy the encoded output for usage in contract verifica
 ### Contract Verification
 The final step for the MainNet deployment is the contract verificationSmart contract verification.
 
-This can be dome on [Etherscan](https://etherscan.io/address/<REAL_ADDRESS_HERE>).
+This can be done on [Etherscan](https://etherscan.io/address/<REAL_ADDRESS_HERE>).
 - Click on the `Contract Creation` link in the `to` column
 - Click on the `Contract Code` link
 
 Fill in the following data.
 ```
 Contract Address:       <REAL_ADDRESS_HERE>
-Contract Name:          IcoCrowdsale
+Contract Name:          TokenCrowdsale
 Compiler:               v0.4.18+commit.9cf6e910
 Optimization:           YES
-Solidity Contract Code: <Copy & Paste from ./build/bundle/IcoCrowdsale_all.sol>
+Solidity Contract Code: <Copy & Paste from ./build/bundle/TokenCrowdsale_all.sol>
 Constructor Arguments:  <ABI from abiEncode.js>
 ```
 - paste the result from __contract verification__ into `Constructor Arguments ABI-encoded`

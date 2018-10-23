@@ -35,7 +35,7 @@ export {BigNumber};
 /**
  * @const cnf Static config from JSON file
  */
-const cnf = require('../../../ico.cnf.json');
+const cnf = require('../../../token.cnf.json');
 export {cnf};
 
 /**

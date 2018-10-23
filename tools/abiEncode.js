@@ -5,7 +5,7 @@
 require('babel-register');
 require('babel-polyfill');
 
-import cnf from '../ico.cnf.json';
+import cnf from '../token.cnf.json';
 import abi from 'ethereumjs-abi';
 import {logger as log} from './logger';
 

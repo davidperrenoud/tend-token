@@ -1,9 +1,9 @@
 /**
- * Migration script for the ICO
+ * Migration script for the token
  */
-const cnf           = require('../../ico.cnf.json');
-const IcoToken      = artifacts.require('./ico/IcoToken.sol');
-const IcoCrowdsale  = artifacts.require('./ico/IcoCrowdsale.sol');
+const cnf             = require('../../token.cnf.json');
+const TendToken       = artifacts.require('./token/TendToken.sol');
+const TendTokenVested = artifacts.require('./token/TendTokenVested.sol');
 
 module.exports = function (deployer, network, accounts) {
     if (network === 'rinkeby' || network === 'mainnet') {
@@ -12,11 +12,6 @@ module.exports = function (deployer, network, accounts) {
         process.exit(1);
     }
 
-    const wallet      = accounts[6];
-    const underwriter = accounts[9];
-    const startTime   = cnf.startTimeTesting;
-    const endTime     = cnf.endTimeTesting;
-
-    deployer.deploy(IcoToken);
-    deployer.deploy(IcoCrowdsale, startTime, endTime, cnf.rateChfPerEth, wallet, cnf.confirmationPeriod, underwriter);
+    deployer.deploy(TendToken);
+    deployer.deploy(TendTokenVested);
 };

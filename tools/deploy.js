@@ -6,9 +6,9 @@ require('babel-register');
 require('babel-polyfill');
 
 import {logger as log} from './logger';
-import cnf from '../ico.cnf.json';
+import cnf from '../token.cnf.json';
 import Web3 from 'web3';
-import * as icoCrowdsaleModule from '../build/bundle/IcoCrowdsale.sol.js';
+import * as tokenCrowdsaleModule from '../build/bundle/TokenCrowdsale.sol.js';
 
 /**
  * Deployment procedure
@@ -19,8 +19,8 @@ async function deploy() {
     const subEsDom              = network === 'rinkeby' ? 'rinkeby.' : '';
     const provider              = `http://${cnf.network[network].host}:${cnf.network[network].port}`;
     const web3                  = new Web3(new Web3.providers.HttpProvider(provider));
-    const abi                   = icoCrowdsaleModule.IcoCrowdsaleAbi;
-    const bin                   = icoCrowdsaleModule.IcoCrowdsaleByteCode;
+    const abi                   = tokenCrowdsaleModule.TokenCrowdsaleAbi;
+    const bin                   = tokenCrowdsaleModule.TokenCrowdsaleByteCode;
     const from                  = cnf.network[network].from;
     const wallet                = cnf.network[network].wallet;
     const underwriter           = cnf.network[network].underwriter;
@@ -31,7 +31,7 @@ async function deploy() {
 
     log.info(`[ ${network} ]`);
 
-    const icoCrowdsaleContract  = new web3.eth.Contract(
+    const tokenCrowdsaleContract  = new web3.eth.Contract(
         abi,
         null,
         {
@@ -42,7 +42,7 @@ async function deploy() {
         }
     );
 
-    const icoCrowdsaleInstance = await icoCrowdsaleContract.deploy({
+    const tokenCrowdsaleInstance = await tokenCrowdsaleContract.deploy({
         data: bin,
         arguments: [
             startTime,
@@ -61,9 +61,9 @@ async function deploy() {
         log.error(error);
     });
 
-    icoCrowdsaleContract.options.address = icoCrowdsaleInstance.options.address;
+    tokenCrowdsaleContract.options.address = tokenCrowdsaleInstance.options.address;
     log.info(`Finished deployment on ${subEsDom} :)`);
-    log.info(`IcoCrowdsale: https://${subEsDom}etherscan.io/address/${icoCrowdsaleContract.options.address}`);
+    log.info(`TokenCrowdsale: https://${subEsDom}etherscan.io/address/${tokenCrowdsaleContract.options.address}`);
 }
 
 /**
